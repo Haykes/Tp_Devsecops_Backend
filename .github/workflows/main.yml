@@ -19,6 +19,7 @@ jobs:
           node-version: '16'
 
       - run: npm install
+      # Commenter l'étape de test si vous n'avez pas encore de tests définis
       # - run: npm test
 
       - name: Build Docker image
@@ -51,9 +52,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Create deploy directory if not exists
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          sudo mkdir -p ${{ secrets.DEPLOY_DIR }};
+          sudo chown -R ${{ secrets.SSH_USER }}:${{ secrets.SSH_USER }} ${{ secrets.DEPLOY_DIR }};
+          "
+
       - name: Archive the repository
         run: |
-          tar -czf repo.tar.gz --exclude='.git' *
+          tar -czf repo.tar.gz .env --exclude='.git' *
 
       - name: Copy the archive to the server
         run: |
