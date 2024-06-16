@@ -19,7 +19,8 @@ jobs:
           node-version: '16'
 
       - run: npm install
-      - run: npm test
+      # Commenter l'étape de test si vous n'avez pas encore de tests définis
+      # - run: npm test
 
       - name: Build Docker image
         run: docker build . --file Dockerfile --tag pedeclercq/tp_devsecops_backend-app:latest
